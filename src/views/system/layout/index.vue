@@ -3,7 +3,7 @@ import {HomeOutlined, ImportOutlined, FundOutlined, UserOutlined, DownOutlined} 
 import {clearToken} from "@/utils/system.js";
 import { theme } from 'ant-design-vue';
 const { useToken } = theme;
-import {menus} from "@/router/routerConfig.js";
+import {menus} from "@/router/router-config.js";
 
 
 export default {
