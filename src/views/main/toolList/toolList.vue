@@ -1,33 +1,26 @@
 <script>
 import {useStateStore} from '@/utils/store';
 import draggable from 'vuedraggable'
-import colorjoe from 'colorjoe'
+
 
 const store = useStateStore()
 
 export default {
     name: "toolList",
-    components:{
-        draggable
+    components: {
+        draggable,
     },
     data() {
         return {
             list: store.getCanvasList,
-            chooseIndex: -1,
-            wrapper: document.createElement('div')
+            chooseElement: null,
+            wrapper: document.createElement('div'),
         }
     },
     methods: {
-        chooseEleAttribute(){
-            let style = this.list[this.chooseIndex - 1]?.element.style
-            return {
-                border: style?.borderColor,
-                'background-color': style?.backgroundColor
-            }
-        },
         chooseLayer(item) {
             let element = item.element
-            this.chooseIndex = item.index
+            this.chooseElement = item
             // 设置包装元素的样式
             this.wrapper.style.position = 'absolute';
             this.wrapper.style.border = '2px dashed red';
@@ -37,10 +30,36 @@ export default {
             this.wrapper.style.top = '-5%';
             this.wrapper.style.left = '-5%';
             element.appendChild(this.wrapper)
+
+
+            let style = this.chooseElement.element.style;
+            this.chooseElement.attr = {
+                border: style?.borderColor,
+                backgroundColor: style?.backgroundColor,
+            }
+
         },
     },
-    mounted() {
-        const joe = colorjoe.rgb(this.$refs.bacColor, 'red');
+    watch:{
+        chooseElement:{
+            handler(){
+                console.log(this.chooseElement.attr.backgroundColor)
+                let bacRgba = this.chooseElement.attr.backgroundColor.rgba
+                let borderRgba = this.chooseElement.attr.border.rgba
+                if (bacRgba?.r){
+                    this.chooseElement.element.style.backgroundColor =  `rgba(${bacRgba.r},${bacRgba.g},${bacRgba.b},${bacRgba.a})`
+                }
+                if (borderRgba?.r){
+                    this.chooseElement.element.style.borderColor =  `rgba(${borderRgba.r},${borderRgba.g},${borderRgba.b},${borderRgba.a})`
+                }
+
+
+            },
+            deep:true,
+        }
+    },
+    created() {
+
 
     }
 }
@@ -53,19 +72,24 @@ export default {
                 <div class="tool-name">
                     属性
                 </div>
-                <div class="attr-parent">
-                    <div class="attr-box">
+                <div class="attr-parent" v-if="chooseElement">
+                    <div class="attr-box" >
                         <div class="attr-name">
                             背景色
                         </div>
                         <div class="attr-item">
-                            <div ref="bacColor" >
-
-                            </div>
+                            <Sketch v-model="chooseElement.attr.backgroundColor"></Sketch>
+                        </div>
+                    </div>
+                    <div class="attr-box" >
+                        <div class="attr-name">
+                            边框
+                        </div>
+                        <div class="attr-item">
+                            <Sketch v-model="chooseElement.attr.border"></Sketch>
                         </div>
                     </div>
                 </div>
-                {{chooseEleAttribute()}}
             </div>
 
         </div>
@@ -79,7 +103,9 @@ export default {
                         v-model="list"
                         item-key="name">
                         <template #item="{element}">
-                            <div @click="chooseLayer(element)" class="layer-item" :class="element.index === chooseIndex?'layer-item-choose':''">{{element.name}}</div>
+                            <div @click="chooseLayer(element)" class="layer-item"
+                                 :class="element.index === chooseElement?.index?'layer-item-choose':''">{{ element.name }}
+                            </div>
                         </template>
                     </draggable>
                 </div>

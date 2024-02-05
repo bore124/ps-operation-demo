@@ -157,6 +157,7 @@ class DragSelection {
     }
     trigger(){
         this.el.addEventListener('mousedown', this.onMouseDown);
+        this.el.style.cursor = 'default';
         document.addEventListener('keydown', this.onKeyDown); // 监听键盘按下
         document.addEventListener('keyup', this.onKeyUp);     // 监听键盘释放
     }
