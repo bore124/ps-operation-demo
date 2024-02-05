@@ -1,43 +1,45 @@
 <script>
-import {SearchOutlined} from '@ant-design/icons-vue';
+import {PlusOutlined, DragOutlined} from '@ant-design/icons-vue';
+import IconToolBar from "@/views/main/iconToolBar/iconToolBar.vue";
+import toolList from "@/views/main/toolList/toolList.vue";
+
 
 export default {
     name: "index",
-    components: {SearchOutlined},
+    components: {toolList, IconToolBar, PlusOutlined, DragOutlined},
     data() {
         return {
+            nowTool:null,
 
         }
     },
-    methods: {}
+    methods: {
+        chooseTool(name){
+            this.nowTool = name
+        }
+    }
 }
 </script>
 
 <template>
     <div class="body">
         <div class="left-tool-bar tool-bar">
-        <div class="tool-box">
-            <SearchOutlined />
-        </div>
+            <iconToolBar @chooseTool="chooseTool"></iconToolBar>
         </div>
         <div class="canvas-parent"
              v-draggable>
             <div class="canvas"
                  v-zoom
+                 v-toolFunction="nowTool"
 
                  id="canvas" ref="canvas">
 
             </div>
         </div>
         <div class="right-tool-bar tool-bar">
-            <div class="tool-box">
-                <div class="tool-detail">
-                    <div class="tool-name">
-                        属性
-                    </div>
-                </div>
-            </div>
+            <tool-list></tool-list>
         </div>
+
     </div>
 </template>
 
@@ -63,9 +65,10 @@ export default {
 }
 
 .left-tool-bar {
-    width: 40px;
+    width: 45px;
     left: 0;
     border-right: 1px solid #1E1F22;
+    padding: 10px 0;
 }
 
 .right-tool-bar {
@@ -74,14 +77,9 @@ export default {
     border-left: 1px solid #1E1F22;
     padding: 20px 0;
 }
-
-.tool-box {
-    padding: 5px 10px;
-    border-bottom: 2px solid #1E1F22;
-    border-top: 2px solid #1E1F22;
-    background: #2B2D30;
+.tool-detail{
+    padding:0 5px;
 }
-
 .canvas-parent {
     flex-grow: 1; /* 占据剩余空间 */
     height: 100%;
@@ -92,16 +90,17 @@ export default {
 .canvas-parent::-webkit-scrollbar {
     width: 10px;
     height: 10px;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .canvas-parent::-webkit-scrollbar-thumb {
     border-radius: 5px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-    background-color: rgba(83, 83, 84,.7);
+    background-color: rgba(83, 83, 84, .7);
 }
-.canvas-parent::-webkit-scrollbar-corner{
-    background-color: rgba(0,0,0,0);
+
+.canvas-parent::-webkit-scrollbar-corner {
+    background-color: rgba(0, 0, 0, 0);
 
 }
 

@@ -5,13 +5,17 @@ import App from './App.vue'
 import router from './router'
 import * as CustomDirectives from './directives/index.js';
 
+import { createPinia } from 'pinia'
 
 const app = createApp(App);
+const pinia = createPinia()
+
 
 for (const [name, directive] of Object.entries(CustomDirectives)) {
     app.directive(name, directive);
 }
 
-app.use(Antd)
+app.use(pinia)
+    .use(Antd)
     .use(router)
     .mount('#app');
