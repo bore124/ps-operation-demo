@@ -5,6 +5,7 @@ export const useStateStore = defineStore("state", {
     state: () => ({
         loading: false,
         canvasList:[],
+        zoomSize:1,
     }),
     actions: {
         setLoading(load) {
@@ -13,7 +14,9 @@ export const useStateStore = defineStore("state", {
         setCanvasList(list){
             this.canvasList = list
         },
-
+        setZoomSize(size){
+            this.zoomSize = size
+        },
     },
     getters: {
         isLoading(state) {
