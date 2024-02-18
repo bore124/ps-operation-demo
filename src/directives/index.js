@@ -183,8 +183,6 @@ class DragSelection {
     }
 
     onMouseMove(e) {
-        let currentX = e.clientX - this.el.getBoundingClientRect().left;
-        let currentY = e.clientY - this.el.getBoundingClientRect().top;
         let offsetLeft = this.el.offsetLeft - this.el.parentElement.scrollLeft
         let offsetTop = this.el.offsetTop - this.el.parentElement.scrollTop
         let scale = this.store.zoomSize
